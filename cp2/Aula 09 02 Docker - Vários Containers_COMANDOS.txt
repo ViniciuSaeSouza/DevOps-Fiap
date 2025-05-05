@@ -1,0 +1,176 @@
+
+
+-- Slide 05
+
+docker network create dimdim-network
+
+
+-- Slide 06
+
+
+-- Via Terminal do Linux
+
+docker run -d \
+  --name dimdim-mysql \
+  --network dimdim-network \
+  -e MYSQL_ROOT_PASSWORD=rootpass \
+  -e MYSQL_DATABASE=dimdimdb \
+  -e MYSQL_USER=dimuser \
+  -e MYSQL_PASSWORD=dimpass \
+  mysql/mysql-server:latest
+
+
+--  Via Power Shell no Windows
+
+docker run -d `
+  --name dimdim-mysql `
+  --network dimdim-network `
+  -e MYSQL_ROOT_PASSWORD=rootpass `
+  -e MYSQL_DATABASE=dimdimdb `
+  -e MYSQL_USER=dimuser `
+  -e MYSQL_PASSWORD=dimpass `
+  mysql/mysql-server:latest
+
+
+-- Via CMD no Windows
+
+docker run -d --name dimdim-mysql --network dimdim-network -e MYSQL_ROOT_PASSWORD=rootpass -e MYSQL_DATABASE=dimdimdb -e MYSQL_USER=dimuser -e MYSQL_PASSWORD=dimpass mysql/mysql-server:latest
+
+
+-- Slide 07
+
+docker logs -f dimdim-mysql
+
+
+
+-- Slide 08
+
+
+-- Via Terminal do Linux
+
+docker run -d \
+  --name dimdim-phpmyadmin \
+  --network dimdim-network \
+  -p 8080:80 \
+  -e PMA_HOST=dimdim-mysql \
+  -e PMA_USER=dimuser \
+  -e PMA_PASSWORD=dimpass \
+  phpmyadmin
+
+
+--  Via Power Shell no Windows
+
+
+docker run -d `
+  --name dimdim-phpmyadmin `
+  --network dimdim-network `
+  -p 8080:80 `
+  -e PMA_HOST=dimdim-mysql `
+  -e PMA_USER=dimuser `
+  -e PMA_PASSWORD=dimpass `
+  phpmyadmin
+
+
+
+-- Via CMD no Windows
+
+docker run -d --name dimdim-phpmyadmin --network dimdim-network -p 8080:80 -e PMA_HOST=dimdim-mysql -e PMA_USER=dimuser -e PMA_PASSWORD=dimpass phpmyadmin
+
+
+Acesse em: 
+
+http://localhost:8080
+http://ipVM:8080 (Abrir a porta da VM antes)
+
+
+-- Slide 09
+
+
+CUIDADO AO CRIAR O ARQUIVO NO WINDOWS: VERIFIQUE SE ESTÁ REALMENTE COM A EXTENSÃO ".PHP" E NÃO ".TXT"
+
+
+Copiar o conteúdo do arquivo:
+
+<?php
+$mysqli = new mysqli("dimdim-mysql", "dimuser", "dimpass", "dimdimdb");
+if ($mysqli->connect_error) {
+    die("Erro na conexão: " . $mysqli->connect_error);
+}
+echo "Conectado com sucesso ao Banco DimDim!";
+?>
+
+
+
+-- Slide 11
+
+
+-- Via Terminal do Linux
+
+docker run -d \
+  --name dimdim-php-app \
+  --network dimdim-network \
+  -p 80:80 \
+  -v "$PWD":/var/www/html \
+  php:8.2-apache \
+  bash -c "apt update \
+    && apt install -y libpng-dev libjpeg-dev libonig-dev libxml2-dev libzip-dev unzip zip libmcrypt-dev \
+    && docker-php-ext-install mysqli \
+    && docker-php-ext-enable mysqli \
+    && apachectl -D FOREGROUND"
+
+
+--  Via Power Shell no Windows
+
+docker run -d `
+  --name dimdim-php-app `
+  --network dimdim-network `
+  -p 80:80 `
+  -v "${PWD}:/var/www/html" `
+  php:8.2-apache `
+  bash -c "apt update && \
+    apt install -y libpng-dev libjpeg-dev libonig-dev libxml2-dev libzip-dev unzip zip libmcrypt-dev && \
+    docker-php-ext-install mysqli && \
+    docker-php-ext-enable mysqli && \
+    apachectl -D FOREGROUND"
+
+
+-- Via CMD no Windows
+
+docker run -d --name dimdim-php-app --network dimdim-network -p 80:80 -v "%cd%:/var/www/html" php:8.2-apache bash -c "apt update && apt install -y libpng-dev libjpeg-dev libonig-dev libxml2-dev libzip-dev unzip zip libmcrypt-dev && docker-php-ext-install mysqli && docker-php-ext-enable mysqli && apachectl -D FOREGROUND"
+
+
+
+-- Slide 12
+
+docker logs -f dimdim-php-app
+
+
+-- Slide 13
+
+http://localhost:80
+http://ipVM:80 (Abrir a porta da VM antes)
+
+
+-- Slide 14
+
+docker ps
+
+docker image ls
+
+docker volume ls
+
+
+-- Slide 15
+
+docker inspect dimdim-php-app
+
+
+-- Slide 16
+
+docker stop dimdim-mysql dimdim-phpmyadmin dimdim-php-app
+docker rm dimdim-mysql dimdim-phpmyadmin dimdim-php-app
+docker network rm dimdim-network
+docker system prune -a -f --volumes
+
+
+
