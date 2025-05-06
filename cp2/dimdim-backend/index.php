@@ -1,5 +1,5 @@
 <?php
-$mysqli = new mysqli("dimdim-mysql", "dimuser", "dimpass", "dimdimdb");
+$mysqli = new mysqli("dimdim-bd", "dimuser", "dimpass", "dimdimdb");
 if ($mysqli->connect_error) {
     die("Erro na conexão: " . $mysqli->connect_error);
 }
