@@ -1,0 +1,8 @@
+Atividade em sala de aula:
+0 - Desenhar(draw.io) a arquitetura da solução e realizar as atividades abaixo:
+1 - Configurar um banco de dados no Azure Sql Server(Connections String)
+2 - Configurar um ACR no Azure
+2 - Utilizar a aplicação da GS entregue no semestre passado.
+3 - Configurar a aplicação para utilizar o banco de dados Azure SQL Server
+4 - Criar a imagem e realizar o push da imagem no ACR
+5 - Subir a aplicação no ACI

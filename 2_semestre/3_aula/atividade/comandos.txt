@@ -1,0 +1,30 @@
+Sql Server Admin
+Login: admMaisAgua
+Senha: Saesouza08$
+
+DB_USER = admMaisAgua
+DB_PASSWORD = descubra 🤫
+
+// Construir a imagem a partir do dockerfile
+docker build -t image-ifood:1.0 ./MaisAgua-API/
+
+// Rodar o container localmente para ver se ta tudo ok
+docker container run -d \
+--name container-ifood \
+-p 8080:8080 \
+-e DB_IFOOD_USER=admIfood \
+-e DB_IFOOD_PASSWORD=Saesouza08$ \
+image-ifood:1.0
+
+
+// Logar no az acr (além do az login) para poder dar push nas imagens para o ACR já criado anteriormente via portal ou az CLI
+az acr login --name ifoodregistry
+
+// Preparar tag da imagem para dar push no registry
+docker tag image-ifood:1.0 ifoodregistry.azurecr.io/image-ifood-acr:1.0
+
+//Publicar a imagem na ACR depois de logar
+docker push ifoodregistry.azurecr.io/image-ifood-acr:1.0
+
+//Criar uma instância de ACI com a imagem do ACR
+-----
